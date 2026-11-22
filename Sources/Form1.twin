@@ -1,0 +1,221 @@
+[Description("")]
+[FormDesignerId("B516D4AB-0203-4B68-9F94-F0C43A16DC8B")]
+[PredeclaredId]
+Class Form1
+
+    Dim doOp As Boolean = True
+    Dim first As Boolean = True
+    
+    Dim tempValue As Decimal = 0
+    
+    Sub New()
+    End Sub
+    
+    Private Sub Command17_Click()
+        ResultBox.Text = 0
+        MainText.Text = 0
+        OpsText.Text = ""
+        SideText.Text = "----" & vbNewLine & SideText.Text
+    End Sub
+    
+    Private Sub Command2_Click()
+        InsertValue(1)
+    End Sub
+    
+    Private Sub InsertValue(ByVal val As Integer)
+        
+        If MainText.Text = "0" Then
+            MainText.Text = val
+        Else
+            MainText.Text = MainText.Text & val
+        End If
+        
+    End Sub
+    
+    Private Sub Command13_Click()
+        doCalc1("+")
+        MainText.Text = "0"
+        OpsText.Text = "+"
+    End Sub
+    
+    Private Sub Command14_Click()
+        doCalc1("-")
+        MainText.Text = "0"
+        OpsText.Text = "-"
+    End Sub
+    
+    Private Sub Command15_Click()
+        doCalc1("x")
+        MainText.Text = "0"
+        OpsText.Text = "x"
+    End Sub
+    
+    Private Sub Command16_Click()
+        doCalc1("/")
+        MainText.Text = "0"
+        OpsText.Text = "/"
+    End Sub
+    
+    Private Sub Command1_Click()
+        InsertValue(2)
+    End Sub
+    
+    Private Sub Command9_Click()
+        InsertValue(3)
+    End Sub
+    
+    Private Sub Command3_Click()
+        InsertValue(4)
+    End Sub
+    
+    Private Sub Command6_Click()
+        InsertValue(5)
+    End Sub
+    
+    Private Sub Command10_Click()
+        InsertValue(6)
+    End Sub
+    
+    Private Sub Command4_Click()
+        InsertValue(7)
+    End Sub
+    
+    Private Sub Command7_Click()
+        InsertValue(8)
+    End Sub
+    
+    Private Sub Command5_Click()
+        InsertValue(0)
+    End Sub
+    
+    Private Sub Command11_Click()
+        InsertValue(9)
+    End Sub
+    
+    Private Sub Command12_Click()
+        
+        If MainText.Text = "0" Then
+            Exit Sub
+        End If
+        
+        If OpsText.Text = "=" Then
+            Exit Sub
+        End If
+        
+        doCalc1("=")
+        MainText.Text = "0"
+        OpsText = "="
+    End Sub
+    
+    Private Sub Command8_Click()
+        If MainText.Text = "0" Then
+            MainText.Text = "0."
+        Else
+            MainText.Text = MainText.Text & "."
+        End If
+    End Sub
+    
+    Private Sub Text1_Change()
+        
+    End Sub
+    
+    Private Sub doCalc1(ByVal x As String)
+                
+        If Command20.Tag = "1" Then
+            OpsText = x
+            Command20.Tag = "0"
+        End If
+        
+        'first we complete current command
+        If OpsText.Text = "=" Then
+            Dim t As String = MainText.Text
+            Command17_Click()
+            ResultBox.Text = t
+            Exit Sub
+        End If
+        
+        If MainText.Text = "0" Then
+            Exit Sub
+        End If
+        
+        
+        Dim first As Boolean = doCalc()
+        If first Then
+            'first time running
+            ResultBox.Text = MainText.Text
+        End If
+        
+        MainText.Text = "0"
+    End Sub
+    
+    Private Function doCalc() As Boolean
+        
+        If OpsText.Text = "" Then
+            doCalc = True
+            Exit Function
+        End If
+        
+        Dim op As String
+        op = OpsText.Text
+        
+        Dim badStuff As Boolean = False
+        
+        Dim result As Decimal
+        
+        Select Case op
+            Case ""
+                badStuff = True
+            Case "+"
+                result = ValDec(ResultBox.Text) + ValDec(MainText.Text)
+            Case "-"
+                result = ValDec(ResultBox.Text) - ValDec(MainText.Text)
+            Case "x"
+                result = ValDec(ResultBox.Text) * ValDec(MainText.Text)
+            Case "/"
+                If MainText.Text <> "0" Then
+                    result = ValDec(ResultBox.Text) / ValDec(MainText.Text)
+                Else
+                    badStuff = True
+                End If
+        End Select
+
+        doCalc = False
+        
+        If badStuff Then
+            Exit Function
+        End If
+        
+        Dim firstPart As String
+        firstPart = ResultBox.Text & " " & op & " " & MainText.Text & " = " & result
+        SideText.Text = firstPart & vbNewLine & SideText.Text
+        ResultBox.Text = result
+    End Function
+    
+    Private Sub Command18_Click()
+        ResultBox.Text = 0
+        MainText.Text = 0
+        OpsText.Text = ""
+        SideText.Text = ""
+    End Sub
+    
+    Private Sub Command19_Click()
+        If Len(MainText.Text) = 1 Then
+            MainText.Text = "0"
+            Exit Sub
+        End If
+        
+        Dim s As String = MainText.Text
+        
+        MainText.Text = Left(s, Len(s) - 1)
+    End Sub
+    
+    Private Sub Command20_Click()
+        If OpsText.Text = "" Then
+            Exit Sub
+        End If
+        
+        OpsText.Text = ""
+        Command20.Tag = "1"
+    End Sub
+    
+End Class
